@@ -1,10 +1,10 @@
 {
   "name": "pharmogistics-pre-pack-filter-app",
   "version": "1.0.0",
-  "description": "Pharmogistics custom filter for Pre-Pack technician.",
+  "description": "A application that takes raw cvs files and filters out contens into a list with custom parameters.",
   "main": "index.js",
   "scripts": {
-    "test": "\t"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
