@@ -1,70 +1,133 @@
 import React, { Component } from 'react';
 import './App.css';
+import Tesseract from 'tesseract.js';
 
-var Tesseract = window.Tesseract;
+// var Tesseract = window.Tesseract;
 
 class App extends Component {
-  
-  constructor(props) {
-    super(props)
-    this.state = {
-      uploads: [],
-      patterns: [],
-      documents: []
-    };
-  }
+	constructor(props) {
+		super(props);
+		this.state = {
+			uploads: [],
+			patterns: [],
+			documents: []
+		};
+	}
 
-  render() {
-    return (
-      <div className="app">
-        <header className="header">
-          <h1>Pre-Pack List of Todos</h1>
-        </header>
+	// How it handles files
+	handleChange = (event) => {
+		if (event.target.files[0]) {
+			var uploads = [];
+			for (var key in event.target.files) {
+				if (!event.target.files.hasOwnProperty(key)) continue;
+				let upload = event.target.files[key];
+				uploads.push(URL.createObjectURL(upload));
+			}
+			this.setState({
+				uploads: uploads
+			});
+		} else {
+			this.setState({
+				uploads: []
+			});
+		}
+	};
 
-        { /* File uploader */ }
-        <section className="hero">
-          <label className="fileUploaderContainer">
-            Click here to upload documents
-            <input type="file" id="fileUploader" multiple />
-          </label>
+	// this updates to show ts results
+	generateText = () => {
+		let uploads = this.state.uploads;
 
-          <div>
-            { /* Previews will be shown here */ }
-          </div>
+		for (var i = 0; i < uploads.length; i++) {
+			Tesseract.recognize(uploads[i], {
+				lang: 'eng'
+			})
+				.catch((err) => {
+					console.error(err);
+				})
+				.then((result) => {
+					//       // Get Confidence score
+					let confidence = result.confidence;
 
-          <button className="button">Generate</button>
-        </section>
+					//       // Get full output
+					let text = result.text;
 
-        { /* Results */ }
-        <section className="results">
+					// Get codes
+					let pattern = /\b\w{10,10}\b/g;
+					let patterns = result.text.match(pattern);
 
-          <div className="results__result">
-            <div className="results__result__image">
-              <img width="250px" />
-            </div>
-            <div className="results__result__info">
-              <div className="results__result__info__codes">
-                <small>{ /* Confidence score */ }</small>
-              </div>
-              <div className="results__result__info__codes">
-                <small>{ /* Pattern output */ }</small>
-              </div>
-              <div className="results__result__info__text">
-                <small>{ /* Full output */ }</small>
-              </div>
-            </div>
-            <hr />
-          </div>
+					// Update state
+					this.setState({
+						patterns: this.state.patterns.concat(patterns),
+						documents: this.state.documents.concat({
+							pattern: patterns,
+							text: text,
+							confidence: confidence
+						})
+					});
+				});
+		}
+	};
 
-          <div className="results__result">
-            { /* Additional output if more than one document is processed */ }
-          </div>
+	render() {
+		return (
+			<div className="app">
+				<header className="header">
+					<h1>Pre-Pack List of Todos</h1>
+				</header>
 
-        </section>
-      </div>
-    )
-  }
+				{/* File uploader */}
+				<section className="hero">
+					<label className="fileUploaderContainer">
+						Click here to upload documents
+						<input type="file" id="fileUploader" onChange={this.handleChange} multiple />
+					</label>
 
+					<div class="preview">
+						{this.state.uploads.map((value, index) => {
+							return <img key={index} src={value} width="1000px" />;
+						})}
+					</div>
+
+					<button onClick={this.generateText} className="button">
+						Generate
+					</button>
+				</section>
+
+				{/* Results */}
+				{/* <section className="results">
+					{this.state.documents.map((value, index) => {
+						return (
+							<div key={index} className="results__result">
+								<div className="results__result__image">
+									<img src={this.state.uploads[index]} width="250px" />
+								</div>
+								<div className="results__result__info">
+									<div className="results__result__info__codes">
+										<small>
+											<strong>Confidence Score:</strong> {value.confidence}
+										</small>
+									</div>
+									<div className="results__result__info__codes">
+										<small>
+											<strong>Pattern Output:</strong>{' '}
+											{value.pattern.map((pattern) => {
+												return pattern + ', ';
+											})}
+										</small>
+									</div>
+									<div className="results__result__info__text">
+										<small>
+											<strong>Full Output:</strong> {value.text}
+										</small>
+									</div>
+								</div>
+							</div>
+						);
+					})}
+				</section> */}
+			</div>
+		);
+	}
 }
 
 export default App;
