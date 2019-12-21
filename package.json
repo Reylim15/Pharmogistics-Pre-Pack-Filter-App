@@ -1,0 +1,19 @@
+{
+  "name": "pharmogistics-pre-pack-filter-app",
+  "version": "1.0.0",
+  "description": "Pharmogistics custom filter for Pre-Pack technician.",
+  "main": "index.js",
+  "scripts": {
+    "test": "\t"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Reylim15/Pharmogistics-Pre-Pack-Filter-App.git"
+  },
+  "author": "Rey_Daniel_Lim",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Reylim15/Pharmogistics-Pre-Pack-Filter-App/issues"
+  },
+  "homepage": "https://github.com/Reylim15/Pharmogistics-Pre-Pack-Filter-App#readme"
+}
