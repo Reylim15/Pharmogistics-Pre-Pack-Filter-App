@@ -33,14 +33,14 @@ class App extends Component {
 		}
 	};
 
+  postConsoleButtonFire = () => {console.log('consolelogtxt')
+};
 	// this updates to show ts results
 	generateText = () => {
 		let uploads = this.state.uploads;
 
 		for (var i = 0; i < uploads.length; i++) {
-			Tesseract.recognize(uploads[i], {
-				lang: 'eng'
-			})
+			Tesseract.recognize(uploads[i], 'eng')
 				.catch((err) => {
 					console.error(err);
 				})
@@ -91,10 +91,13 @@ class App extends Component {
 					<button onClick={this.generateText} className="button">
 						Generate
 					</button>
+					<button onClick={this.postConsoleButtonFire} className="button">
+						Console Fire
+					</button>
 				</section>
 
 				{/* Results */}
-				{/* <section className="results">
+				<section className="results">
 					{this.state.documents.map((value, index) => {
 						return (
 							<div key={index} className="results__result">
@@ -124,7 +127,7 @@ class App extends Component {
 							</div>
 						);
 					})}
-				</section> */}
+				</section>
 			</div>
 		);
 	}
